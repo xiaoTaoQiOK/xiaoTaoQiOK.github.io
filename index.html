@@ -1,0 +1,1708 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5, #e8f5e8);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .category-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50px;
+            color: #34495e;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 120px;
+            max-width: 150px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .category-btn:hover {
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-3px);
+            color: #2980b9;
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(to right, #3498db, #9b59b6);
+            color: white;
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .table-container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+        
+        .table-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(to right, #3498db, #9b59b6);
+        }
+        
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .click-hint {
+            color: #e74c3c;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 4px 10px;
+            border-radius: 8px;
+            margin-left: 8px;
+            animation: pulse-red 1.5s ease-in-out infinite;
+            display: inline-block;
+            border: 2px solid rgba(231, 76, 60, 0.3);
+        }
+        
+        @keyframes pulse-red {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 8px rgba(231, 76, 60, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:nth-child(even) {
+            background: rgba(236, 240, 241, 0.3);
+        }
+        
+        tbody tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+            transform: scale(1.01);
+        }
+        
+        td {
+            padding: 15px;
+            font-size: 1rem;
+            color: #2c3e50;
+        }
+        
+        .cheat-name {
+            font-weight: 500;
+            color: #2980b9;
+        }
+        
+        .cheat-code {
+            background: rgba(236, 240, 241, 0.7);
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(189, 195, 199, 0.5);
+            color: #2c3e50;
+            position: relative;
+            min-width: 140px;
+        }
+        
+        .cheat-code:hover {
+            background: rgba(52, 152, 219, 0.15);
+            transform: translateY(-2px);
+            color: #2980b9;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+            border-color: #3498db;
+        }
+        
+        .cheat-code::before {
+            content: "";
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232980b9'%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: contain;
+            margin-right: 8px;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        
+        .cheat-code:hover::before {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(52, 73, 94, 0.95);
+            color: #ecf0f1;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .copy-notification::before {
+            content: "✓";
+            font-size: 1.2em;
+            color: #2ecc71;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            width: 100%;
+        }
+        
+        @media (max-width: 600px) {
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .category-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+            
+            .click-hint {
+                font-size: 0.85rem;
+                padding: 3px 8px;
+                margin-left: 5px;
+            }
+            
+            .cheat-code {
+                padding: 8px 12px;
+                min-width: 120px;
+            }
+            
+            .cheat-code::before {
+                width: 14px;
+                height: 14px;
+                margin-right: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>圣安地列斯(奈飞)</h1>
+            <p class="subtitle">热门作弊码合集</p>
+        </header>
+        
+        <div class="category-tabs">
+		    <button class="category-btn active" data-category="add">新增作弊码</button>
+            <button class="category-btn " data-category="player">主角</button>
+            <button class="category-btn" data-category="vehicle">载具(含新增)</button>
+            <button class="category-btn" data-category="theme">主题和NPC</button>
+            <button class="category-btn" data-category="gang">帮派</button>
+            <button class="category-btn" data-category="weather">时间和天气</button>
+        </div>
+
+        <!-- 新增作弊码表格 -->
+        <div class="table-container active" id="add-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cheat-name">跳过任务</td>
+                        <td><span class="cheat-code">NoPity</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">无敌</td>
+                        <td><span class="cheat-code">TrueGod</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">传送到地图导航点位置</td>
+                        <td><span class="cheat-code">Teleport</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">新增200多个车辆(这个只是说明,具体作弊码在"载具(含新增)"标签下)</td>
+                        <td><span class="cheat-code">模型ID+S，模型ID为(400~611)，也就是400s~611s</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">新增200多个主角皮肤(这个只是说明,不是具体作弊码)</td>
+                        <td><span class="cheat-code">模型ID+T，模型ID为(7~299)，也就是7t~299t</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">武器包4(火神机枪/Vibrator/夜视镜/热成像夜视镜,后两者交替出现)</td>
+                        <td><span class="cheat-code">SecretSpySet</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">打开载具全部车门(包括引擎盖\后备厢门,再输则关闭)</td>
+                        <td><span class="cheat-code">SlamDoors</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">时间前进4小时</td>
+                        <td><span class="cheat-code">TimeTraveler</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">锁定时间</td>
+                        <td><span class="cheat-code">FreezeIt</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">启用杠杆步枪和火神机枪的自动瞄准功能</td>
+                        <td><span class="cheat-code">AllowAutoAimingOnRFMG</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">让车辆可以像建筑物一样能够被攀爬上</td>
+                        <td><span class="cheat-code">ClimbOnAnyVehicle</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">在绝大多数室内空间可以冲刺。即原版和十周年的插件“Sprint Everywhere”</td>
+                        <td><span class="cheat-code">SprintOnAnySurface</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">恢复十周年版被隐藏起来的作弊码</td>
+                        <td><span class="cheat-code">RestoreDebuggingCheats</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+		
+        <!-- 主角表格 -->
+        <div class="table-container" id="player-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cheat-name">高级武器包</td>
+                        <td><span class="cheat-code">nutterstoys</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">中级武器包</td>
+                        <td><span class="cheat-code">professionalskit</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">初级武器包</td>
+                        <td><span class="cheat-code">thugsarmoury</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">无限生命（仍会被
+炸死、淹死、控死)</td>
+                        <td><span class="cheat-code">noonecanhurtme</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">无限弹药(也会影响行人)</td>
+                        <td><span class="cheat-code">fullclip</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">—拳必杀(行人也能一拳必杀CJ)</td>
+                        <td><span class="cheat-code">stinglikeabee</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">CJ可以跳高十倍</td>
+                        <td><span class="cheat-code">kangaroo</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得降落伞</td>
+                        <td><span class="cheat-code">letsgobasejumping</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得喷气背包</td>
+                        <td><span class="cheat-code">rocketman</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">CJ永远不会饿</td>
+                        <td><span class="cheat-code">iamneverhungry</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">脂肪、肌肉减到最少</td>
+                        <td><span class="cheat-code">leanandmean</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">驾驶技术全满</td>
+                        <td><span class="cheat-code">naturaltalent</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">最大体力</td>
+                        <td><span class="cheat-code">icangoallnight</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">最大性感魅力</td>
+                        <td><span class="cheat-code">helloladies</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">最大声望</td>
+                        <td><span class="cheat-code">worshipme</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">最大肌肉</td>
+                        <td><span class="cheat-code">bufimeup</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">水下无限呼吸</td>
+                        <td><span class="cheat-code">manfromatlantis</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">变胖</td>
+                        <td><span class="cheat-code">whoateallthepies</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">加满六星通缉度</td>
+                        <td><span class="cheat-code">bringiton</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">消除所有通缉度</td>
+                        <td><span class="cheat-code">turndowntheheat</span></td>
+                    </tr><tr>
+                        <td class="cheat-name">通缉度增加两星</td>
+                        <td><span class="cheat-code">turnuptheheat</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">锁定通缉等级</td>
+                        <td><span class="cheat-code">idoasiplease</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">所有武器达到杀手级别</td>
+                        <td><span class="cheat-code">professionalkiller</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">自杀</td>
+                        <td><span class="cheat-code">goodbyecruelworld</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">加满血、护甲，并获得25万美元(正在操作的载具也会修好)</td>
+                        <td><span class="cheat-code">ineedsomehelp</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">周围速度减慢，子弹时间</td>
+                        <td><span class="cheat-code">takeachillpill</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 载具表格 -->
+        <div class="table-container" id="vehicle-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cheat-name">座驾无敌(立即摧毁其他车辆)</td>
+                        <td><span class="cheat-code">touchmycaryoudie</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得防撞轿车</td>
+                        <td><span class="cheat-code">oldspeeddemon</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得加长豪华轿车</td>
+                        <td><span class="cheat-code">celebritystatus</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得怪物卡车</td>
+                        <td><span class="cheat-code">monstermash</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得九头蛇战斗机</td>
+                        <td><span class="cheat-code">jumpjet</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得猎手武装直升机</td>
+                        <td><span class="cheat-code">ohdude</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">获得犀牛坦克</td>
+                        <td><span class="cheat-code">timetokickass</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">获得特技飞机</td>
+                        <td><span class="cheat-code">flyingtostunt</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得气垫船</td>
+                        <td><span class="cheat-code">iwanttohover</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">获得灵车</td>
+                        <td><span class="cheat-code">wheresthefuneral</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得Rancher</td>
+                        <td><span class="cheat-code">jqntdmh</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得场地赛车B</td>
+                        <td><span class="cheat-code">justtryandstopme</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得场地赛车A</td>
+                        <td><span class="cheat-code">notforpublicroads</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得四轮摩托车</td>
+                        <td><span class="cheat-code">fourwheelfun</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得推土机</td>
+                        <td><span class="cheat-code">itsallbull</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得垃圾车</td>
+                        <td><span class="cheat-code">truegrime</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">获得带附加罐拖车的罐车</td>
+                        <td><span class="cheat-code">hittheroadjack</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得高尔夫球车</td>
+                        <td><span class="cheat-code">18holes</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">自行车可以跳很高</td>
+                        <td><span class="cheat-code">cjphonehome</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">车辆操控更加灵敏</td>
+                        <td><span class="cheat-code">sticklikeglue</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">车可以飞行</td>
+                        <td><span class="cheat-code">chittychittybangbang</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">船可以飞行</td>
+                        <td><span class="cheat-code">flyingfish</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">所有车获得氮气加速</td>
+                        <td><span class="cheat-code">speedfreak</span></td>
+                    </tr>
+					                    <tr>
+                        <td class="cheat-name">中档越野吉普车(landstal)</td>
+                        <td><span class="cheat-code">400s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">默丘利美洲狮(bravura)</td>
+                        <td><span class="cheat-code">401s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·Camaro(buffalo)</td>
+                        <td><span class="cheat-code">402s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">奔路者集装箱运输车(linerun)</td>
+                        <td><span class="cheat-code">403s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·新星(peren)</td>
+                        <td><span class="cheat-code">404s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">哨兵(sentinel)</td>
+                        <td><span class="cheat-code">405s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">巨型翻斗车(dumper)</td>
+                        <td><span class="cheat-code">406s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">喷水消防车(firetruk)</td>
+                        <td><span class="cheat-code">407s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">垃圾运输车(trash)</td>
+                        <td><span class="cheat-code">408s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">加长林肯轿车(stretch)</td>
+                        <td><span class="cheat-code">409s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">道奇·白羊座(manana)</td>
+                        <td><span class="cheat-code">410s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">兰博基尼毒药</td>
+                        <td><span class="cheat-code">411s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">巫毒(voodoo)</td>
+                        <td><span class="cheat-code">412s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">福特·Aero Star(pony)</td>
+                        <td><span class="cheat-code">413s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">骡子大型货车(mule)</td>
+                        <td><span class="cheat-code">414s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">法拉利·512(cheetah)</td>
+                        <td><span class="cheat-code">415s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">救护车(ambulan)</td>
+                        <td><span class="cheat-code">416s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">SH-3海怪多用途直升机(leviathn)</td>
+                        <td><span class="cheat-code">417s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·Astro Van(moonbeam)</td>
+                        <td><span class="cheat-code">418s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">卡迪拉克·剑鱼(esperant)</td>
+                        <td><span class="cheat-code">419s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">新式出租车(taxi)</td>
+                        <td><span class="cheat-code">420s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">林肯·Mark 7(washing)</td>
+                        <td><span class="cheat-code">421s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·S10(bobcat)</td>
+                        <td><span class="cheat-code">422s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">冰淇淩车(mrwhoop)</td>
+                        <td><span class="cheat-code">423s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">沙滩越野车(bfinject)</td>
+                        <td><span class="cheat-code">424s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">AH-64阿帕奇武装直升机(hunter)</td>
+                        <td><span class="cheat-code">425s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·Caprice(premier)</td>
+                        <td><span class="cheat-code">426s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">特警专用卡车(enforcer)</td>
+                        <td><span class="cheat-code">427s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">运钞车(securica)</td>
+                        <td><span class="cheat-code">428s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">道奇·奎蛇(banshee)</td>
+                        <td><span class="cheat-code">429s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">警用冲锋舟(predator)</td>
+                        <td><span class="cheat-code">430s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">公共汽车(bus)</td>
+                        <td><span class="cheat-code">431s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">犀牛坦克(rhino)</td>
+                        <td><span class="cheat-code">432s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">运兵车(barracks)</td>
+                        <td><span class="cheat-code">433s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">仿古跑车(hotknife)</td>
+                        <td><span class="cheat-code">434s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">拖车车箱1(artict1)</td>
+                        <td><span class="cheat-code">435s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">尼桑·Pulsar(previon)</td>
+                        <td><span class="cheat-code">436s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">长途客车(coach)</td>
+                        <td><span class="cheat-code">437s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">老式出租车(cabbie)</td>
+                        <td><span class="cheat-code">438s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">福特·野马MK1(stallion)</td>
+                        <td><span class="cheat-code">439s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">兰伯(rumpo)</td>
+                        <td><span class="cheat-code">440s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">玩具赛车(rcbandit)</td>
+                        <td><span class="cheat-code">441s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">葬礼车(romero)</td>
+                        <td><span class="cheat-code">442s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">车辆运输车(packer)</td>
+                        <td><span class="cheat-code">443s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">普通越野大脚车(monster)</td>
+                        <td><span class="cheat-code">444s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">奔驰·300D(admiral)</td>
+                        <td><span class="cheat-code">445s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">角鲨快艇(squalo)</td>
+                        <td><span class="cheat-code">446s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">麻雀民用水上直升机(seaspar)</td>
+                        <td><span class="cheat-code">447s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">比萨店专用摩托车(pizzaboy)</td>
+                        <td><span class="cheat-code">448s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">有轨电车(tram)</td>
+                        <td><span class="cheat-code">449s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">拖车车箱2(artict2)</td>
+                        <td><span class="cheat-code">450s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">法拉利·F40(turismo)</td>
+                        <td><span class="cheat-code">451s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">高速快艇(speeder)</td>
+                        <td><span class="cheat-code">452s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">渔船(reefer)</td>
+                        <td><span class="cheat-code">453s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">双层中型游船(tropic)</td>
+                        <td><span class="cheat-code">454s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">解放牌大卡车(flatbed)</td>
+                        <td><span class="cheat-code">455s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">福特·F-650(yankee)</td>
+                        <td><span class="cheat-code">456s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">高尔夫球车(caddy)</td>
+                        <td><span class="cheat-code">457s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">本田·Accord(solair)</td>
+                        <td><span class="cheat-code">458s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">伯利克的遥控用货车(topfun)</td>
+                        <td><span class="cheat-code">459s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">水上飞机(skimmer)</td>
+                        <td><span class="cheat-code">460s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">PCJ-600摩托车(pcj600)</td>
+                        <td><span class="cheat-code">461s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">轻便摩托车(faggio)</td>
+                        <td><span class="cheat-code">462s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">高速路摩托车(freeway)</td>
+                        <td><span class="cheat-code">463s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">玩具战斗机(rcbaron)</td>
+                        <td><span class="cheat-code">464s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">玩具直升机1(rcraider)</td>
+                        <td><span class="cheat-code">465s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">道奇·外交官(glendale)</td>
+                        <td><span class="cheat-code">466s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·海洋(oceanic)</td>
+                        <td><span class="cheat-code">467s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">越野摩托车(sanchez)</td>
+                        <td><span class="cheat-code">468s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">麻雀民用直升机(sparrow)</td>
+                        <td><span class="cheat-code">469s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">悍马军用吉普车(patriot)</td>
+                        <td><span class="cheat-code">470s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">四轮小摩托(quad)</td>
+                        <td><span class="cheat-code">471s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">海岸警卫船(coastg)</td>
+                        <td><span class="cheat-code">472s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">小汽艇(dinghy)</td>
+                        <td><span class="cheat-code">473s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">赫尔墨斯(hermes)</td>
+                        <td><span class="cheat-code">474s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">奥兹莫比尔·超短剑(sabre)</td>
+                        <td><span class="cheat-code">475s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">P-51野马战斗机(rustler)</td>
+                        <td><span class="cheat-code">476s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">马自达·RX－7(zr350)</td>
+                        <td><span class="cheat-code">477s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">乡村卡车(walton)</td>
+                        <td><span class="cheat-code">478s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">福特·Stationwagon(regina)</td>
+                        <td><span class="cheat-code">479s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">保时捷·911(comet)</td>
+                        <td><span class="cheat-code">480s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">越野自行车(bmx)</td>
+                        <td><span class="cheat-code">481s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">道奇·Ram Bus(burrito)</td>
+                        <td><span class="cheat-code">482s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">露营车(camper)</td>
+                        <td><span class="cheat-code">483s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">侯爵私人游船(marquis)</td>
+                        <td><span class="cheat-code">484s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">机场拖车(baggage)</td>
+                        <td><span class="cheat-code">485s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">推土机(dozer)</td>
+                        <td><span class="cheat-code">486s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">贝尔407民用直升机(maverick)</td>
+                        <td><span class="cheat-code">487s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">新闻采访直升机(vcnmav)</td>
+                        <td><span class="cheat-code">488s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">普通吉普车1(rancher)</td>
+                        <td><span class="cheat-code">489s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">FBI间谍车(fbiranch)</td>
+                        <td><span class="cheat-code">490s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">林肯·Mark 7（后有布篷）(virgo)</td>
+                        <td><span class="cheat-code">491s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">绿林(greenwoo)</td>
+                        <td><span class="cheat-code">492s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">摩托艇(jetmax)</td>
+                        <td><span class="cheat-code">493s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">场地赛车3(hotring)</td>
+                        <td><span class="cheat-code">494s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">沙漠越野吉普车(sandking)</td>
+                        <td><span class="cheat-code">495s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">本田CRX(blistac)</td>
+                        <td><span class="cheat-code">496s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">警用直升机(polmav)</td>
+                        <td><span class="cheat-code">497s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">箱式货车(boxville)</td>
+                        <td><span class="cheat-code">498s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">福特箱式货车(benson)</td>
+                        <td><span class="cheat-code">499s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">军用越野车(mesa)</td>
+                        <td><span class="cheat-code">500s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">玩具直升机2(rcgoblin)</td>
+                        <td><span class="cheat-code">501s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">场地赛车1(hotrina)</td>
+                        <td><span class="cheat-code">502s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">场地赛车2(hotrinb)</td>
+                        <td><span class="cheat-code">503s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">防撞轿车(bloodra)</td>
+                        <td><span class="cheat-code">504s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">普通吉普车2(rnchlure)</td>
+                        <td><span class="cheat-code">505s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">三菱·3000GT(supergt)</td>
+                        <td><span class="cheat-code">506s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">别克·Road Master(elegant)</td>
+                        <td><span class="cheat-code">507s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">旅行车(journey)</td>
+                        <td><span class="cheat-code">508s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">普通自行车(bike)</td>
+                        <td><span class="cheat-code">509s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">山地自行车(mtbike)</td>
+                        <td><span class="cheat-code">510s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">猎犬小型客机(beagle)</td>
+                        <td><span class="cheat-code">511s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">农用撒药飞机(cropdust)</td>
+                        <td><span class="cheat-code">512s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">杂技表演飞机(stunt)</td>
+                        <td><span class="cheat-code">513s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">油罐运输车(petro)</td>
+                        <td><span class="cheat-code">514s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">火车式运输车(rdtrain)</td>
+                        <td><span class="cheat-code">515s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">星云(nebula)</td>
+                        <td><span class="cheat-code">516s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">别克·Regal(majestic)</td>
+                        <td><span class="cheat-code">517s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·蒙特卡洛(buccanee)</td>
+                        <td><span class="cheat-code">518s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">C-21A夏马风客机(shamal)</td>
+                        <td><span class="cheat-code">519s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">鹞式战斗机(hydra)</td>
+                        <td><span class="cheat-code">520s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">FCR-900摩托车(fcr900)</td>
+                        <td><span class="cheat-code">521s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">NRG-500摩托车(nrg500)</td>
+                        <td><span class="cheat-code">522s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">警用摩托车(copbike)</td>
+                        <td><span class="cheat-code">523s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">水泥运输车(cement)</td>
+                        <td><span class="cheat-code">524s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">拖吊车(towtruck)</td>
+                        <td><span class="cheat-code">525s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">福特·雷鸟(fortune)</td>
+                        <td><span class="cheat-code">526s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·Z24(cadrona)</td>
+                        <td><span class="cheat-code">527s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">FBI巡逻装甲车(fbitruck)</td>
+                        <td><span class="cheat-code">528s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">道奇·王朝(willard)</td>
+                        <td><span class="cheat-code">529s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">叉车(forklift)</td>
+                        <td><span class="cheat-code">530s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">拖拉机(tractor)</td>
+                        <td><span class="cheat-code">531s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">联合收割机(combine)</td>
+                        <td><span class="cheat-code">532s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">菲尔兹(feltzer)</td>
+                        <td><span class="cheat-code">533s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">林肯·Mark 5(remingtn)</td>
+                        <td><span class="cheat-code">534s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·CST(slamvan)</td>
+                        <td><span class="cheat-code">535s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·Caprice Droptop(blade)</td>
+                        <td><span class="cheat-code">536s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">货运列车车头(freight)</td>
+                        <td><span class="cheat-code">537s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">客运列车车头(streak)</td>
+                        <td><span class="cheat-code">538s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">汽垫船(vortex)</td>
+                        <td><span class="cheat-code">539s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">奔驰·E120(vincent)</td>
+                        <td><span class="cheat-code">540s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">福特·GT－40(bullet)</td>
+                        <td><span class="cheat-code">541s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">福特·都灵(clover)</td>
+                        <td><span class="cheat-code">542s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">低档皮卡车(sadler)</td>
+                        <td><span class="cheat-code">543s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">云梯消防车(firela)</td>
+                        <td><span class="cheat-code">544s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">福特·Hotrod(hustler)</td>
+                        <td><span class="cheat-code">545s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·流明(intruder)</td>
+                        <td><span class="cheat-code">546s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">丰田·花冠(primo)</td>
+                        <td><span class="cheat-code">547s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">卡-60军用运输直升机(cargobob)</td>
+                        <td><span class="cheat-code">548s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·Corvair(tampa)</td>
+                        <td><span class="cheat-code">549s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">尼桑Maxima(sunrise)</td>
+                        <td><span class="cheat-code">550s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">荣誉(merit)</td>
+                        <td><span class="cheat-code">551s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">道路维修车(utility)</td>
+                        <td><span class="cheat-code">552s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">内华达中型运输机(nevada)</td>
+                        <td><span class="cheat-code">553s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·CK(yosemite)</td>
+                        <td><span class="cheat-code">554s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">捷豹·XKE(windsor)</td>
+                        <td><span class="cheat-code">555s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">越野大脚车（车顶有灯）(monstera)</td>
+                        <td><span class="cheat-code">556s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">越野大脚车（车顶无灯）(monsterb)</td>
+                        <td><span class="cheat-code">557s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">三菱·日冕(uranus)</td>
+                        <td><span class="cheat-code">558s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">小丑(jester)</td>
+                        <td><span class="cheat-code">559s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">斯巴鲁·WRX STI(sultan)</td>
+                        <td><span class="cheat-code">560s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">霍尔顿·Commodore(stratum)</td>
+                        <td><span class="cheat-code">561s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">尼桑·地平线R32(elegy)</td>
+                        <td><span class="cheat-code">562s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">UH-60黑鹰多用途直升机(raindanc)</td>
+                        <td><span class="cheat-code">563s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">玩具坦克(rctiger)</td>
+                        <td><span class="cheat-code">564s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">本田·Civic Hatch(flash)</td>
+                        <td><span class="cheat-code">565s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">田穗真(tahoma)</td>
+                        <td><span class="cheat-code">566s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·Impala（游戏中为跳舞车）(savanna)</td>
+                        <td><span class="cheat-code">567s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">沙漠跳跃车(bandito)</td>
+                        <td><span class="cheat-code">568s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">货运列车平板(freiflat)</td>
+                        <td><span class="cheat-code">569s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">客运列车车厢(streakc)</td>
+                        <td><span class="cheat-code">570s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">卡丁车(kart)</td>
+                        <td><span class="cheat-code">571s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">割草机(mower)</td>
+                        <td><span class="cheat-code">572s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">沙漠越野卡车(duneride)</td>
+                        <td><span class="cheat-code">573s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">扫路车(sweeper)</td>
+                        <td><span class="cheat-code">574s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">卡迪拉克仿古车（游戏中为皮条车）(broadway)</td>
+                        <td><span class="cheat-code">575s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·Bel Air(tornado)</td>
+                        <td><span class="cheat-code">576s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">空客A300大型民航客机(at400)</td>
+                        <td><span class="cheat-code">577s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">大型货车(dft30)</td>
+                        <td><span class="cheat-code">578s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">高档越野吉普车(huntley)</td>
+                        <td><span class="cheat-code">579s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">劳斯莱斯·幻影(stafford)</td>
+                        <td><span class="cheat-code">580s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">BF-400摩托车(bf400)</td>
+                        <td><span class="cheat-code">581s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">新闻采访车(newsvan)</td>
+                        <td><span class="cheat-code">582s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">行李车(tug)</td>
+                        <td><span class="cheat-code">583s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">油罐车箱(petrotr)</td>
+                        <td><span class="cheat-code">584s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">尼桑·Infinity J30(emperor)</td>
+                        <td><span class="cheat-code">585s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">旅行者摩托车(wayfarer)</td>
+                        <td><span class="cheat-code">586s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">尼桑·350Z(euros)</td>
+                        <td><span class="cheat-code">587s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">香肠车(hotdog)</td>
+                        <td><span class="cheat-code">588s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">俱乐部(club)</td>
+                        <td><span class="cheat-code">589s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">货运列车车厢(freibox)</td>
+                        <td><span class="cheat-code">590s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">拖车车箱3(artict3)</td>
+                        <td><span class="cheat-code">591s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">C-17环球霸王战略运输机(androm)</td>
+                        <td><span class="cheat-code">592s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">渡渡鸟教练机(dodo)</td>
+                        <td><span class="cheat-code">593s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">花盆车(rccam)</td>
+                        <td><span class="cheat-code">594s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">军用小快艇(launch)</td>
+                        <td><span class="cheat-code">595s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">洛杉基警车(copcarla)</td>
+                        <td><span class="cheat-code">596s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">旧金山警车(copcarsf)</td>
+                        <td><span class="cheat-code">597s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">拉斯维加斯警车(copcarvg)</td>
+                        <td><span class="cheat-code">598s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">警用吉普车(copcarru)</td>
+                        <td><span class="cheat-code">599s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雪佛兰·EL Camino(picador)</td>
+                        <td><span class="cheat-code">600s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">防暴警察专用装甲运输车(swatvan)</td>
+                        <td><span class="cheat-code">601s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">阿尔法(alpha)</td>
+                        <td><span class="cheat-code">602s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">庞蒂亚克·Trans AM(phoenix)</td>
+                        <td><span class="cheat-code">603s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">撞坏的道奇·外交官(glenshit)</td>
+                        <td><span class="cheat-code">604s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">撞坏的低档皮卡车(sadlshit)</td>
+                        <td><span class="cheat-code">605s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">机场接人车箱(bagboxa)</td>
+                        <td><span class="cheat-code">606s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">机场接货车箱(bagboxb)</td>
+                        <td><span class="cheat-code">607s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">客机舷梯(tugstair)</td>
+                        <td><span class="cheat-code">608s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">夜盗车(boxburg)</td>
+                        <td><span class="cheat-code">609s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">耕耙(farmtr1)</td>
+                        <td><span class="cheat-code">610s</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">道路维修车的工具箱(utiltr1)</td>
+                        <td><span class="cheat-code">611s</span></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 主题和NPC表格 -->
+        <div class="table-container" id="theme-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cheat-name">帮会主题(CJ配备了武士刀，行人都变成帮会成员打扮。车辆风格改变，所有车辆都变黑。)</td>
+                        <td><span class="cheat-code">ninjatown</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">嘉年华/游乐场主题(CJ的服装换成了粉色发型、小丑眼镜和红心短裤。行人被快餐工人和小丑取代。交通工具也会改变风格)</td>
+                        <td><span class="cheat-code">crazytown</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">海滩派对主题
+(CJ的服装改为橄榄短裤、人字拖和专业圈太阳镜。交通和行人被维罗纳海滩周围常见的服装所取代。天气变得非常晴朗。)</td>
+                        <td><span class="cheat-code">lifesabeach</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">乡村主题（CJ的服装改为卡车司机帽和工作服。交通和行人也会改变风格)</td>
+                        <td><span class="cheat-code">hicksville</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">交通信号灯总是绿色</td>
+                        <td><span class="cheat-code">donttryandstopme</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">路上全是豪华跑车</td>
+                        <td><span class="cheat-code">everyoneisrich</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">路上全是便宜的慢车</td>
+                        <td><span class="cheat-code">everyoneispoor</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">所有车辆变粉色</td>
+                        <td><span class="cheat-code">pinkisthenewcool</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">行人变得疯狂</td>
+                        <td><span class="cheat-code">roughneighbourhood</span></td>
+                    </tr><tr>
+                        <td class="cheat-name">行人拥有武器</td>
+                        <td><span class="cheat-code">surroundedbynutters</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">行人用枪攻击CJ</td>
+                        <td><span class="cheat-code">attackofthevillagepeople</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">行人攻击CJ</td>
+                        <td><span class="cheat-code">stoppickingonme</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">行人变猫王</td>
+                        <td><span class="cheat-code">bluesuedeshoes</span></td>
+                    </tr><tr>
+                        <td class="cheat-name">马路上空无一人</td>
+                        <td><span class="cheat-code">ghosttown</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">引爆所有车辆(自行车除外)</td>
+                        <td><span class="cheat-code">allcarsgoboom</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">路上的行人变得疯狂</td>
+                        <td><span class="cheat-code">stateofemergency</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">被你开车撞的车会飘起来飞走</td>
+                        <td><span class="cheat-code">bubblecars</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">路上的车全变黑</td>
+                        <td><span class="cheat-code">solongasitsblack</span></td>
+                    </tr>
+					
+					<tr>
+                        <td class="cheat-name">路上的司机都四处乱撞</td>
+                        <td><span class="cheat-code">alldriversarecriminals</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 帮派表格 -->
+        <div class="table-container" id="gang-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cheat-name">用AK47招募任何人加入帮派</td>
+                        <td><span class="cheat-code">noonecanstopus</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">用火箭发射器招募任何人加入帮派</td>
+                        <td><span class="cheat-code">rocketmayhem</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">用手枪招募任何人加入帮派</td>
+                        <td><span class="cheat-code">wannabeinmygang</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">街头爆发帮派战争</td>
+                        <td><span class="cheat-code">onlyhomiesallowed</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">没有市民或警员，只有帮派成员进行枪战</td>
+                        <td><span class="cheat-code">betterstayindoors</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 时间和天气表格 -->
+        <div class="table-container" id="weather-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cheat-name">阳光灿烂</td>
+                        <td><span class="cheat-code">toodamnhot</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">晴天</td>
+                        <td><span class="cheat-code">pleasantlywarm</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">暴风雨（雷电交加)</td>
+                        <td><span class="cheat-code">scottishsummer</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雨天</td>
+                        <td><span class="cheat-code">stayinandwatchtv</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">沙尘暴</td>
+                        <td><span class="cheat-code">sandinmyears</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">阴天</td>
+                        <td><span class="cheat-code">dulldullday</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">雾天</td>
+                        <td><span class="cheat-code">cantseewhereimgoing</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">加速时间</td>
+                        <td><span class="cheat-code">timejustfliesby</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">游戏节奏减慢</td>
+                        <td><span class="cheat-code">slowitdown</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">游戏节奏加快</td>
+                        <td><span class="cheat-code">speeditup</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">总是21:00，天空是橙色的</td>
+                        <td><span class="cheat-code">dontbringonthenight</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">总是午夜(00:00)</td>
+                        <td><span class="cheat-code">nightprowler</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        
+    </div>
+    
+    <div class="copy-notification" id="copyNotification">已复制到剪贴板</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 分类切换功能
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const tableContainers = document.querySelectorAll('.table-container');
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    // 添加active类到当前按钮
+                    this.classList.add('active');
+                    
+                    // 隐藏所有表格
+                    tableContainers.forEach(table => table.classList.remove('active'));
+                    
+                    // 显示对应分类的表格
+                    const category = this.getAttribute('data-category');
+                    const targetTable = document.getElementById(`${category}-table`);
+                    if (targetTable) {
+                        targetTable.classList.add('active');
+                    }
+                });
+            });
+            
+            // 作弊码复制功能
+            const cheatCodes = document.querySelectorAll('.cheat-code');
+            const notification = document.getElementById('copyNotification');
+            
+            cheatCodes.forEach(code => {
+                code.addEventListener('click', function() {
+                    const textToCopy = this.textContent;
+                    
+                    // 使用现代剪贴板API
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        // 显示复制成功通知
+                        notification.style.opacity = '1';
+                        setTimeout(() => {
+                            notification.style.opacity = '0';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('复制失败: ', err);
+                        // 备用方法
+                        const textArea = document.createElement('textarea');
+                        textArea.value = textToCopy;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        // 显示复制成功通知
+                        notification.style.opacity = '1';
+                        setTimeout(() => {
+                            notification.style.opacity = '0';
+                        }, 2000);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
