@@ -1,0 +1,530 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5, #e8f5e8);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .category-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50px;
+            color: #34495e;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 120px;
+            max-width: 150px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .category-btn:hover {
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-3px);
+            color: #2980b9;
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(to right, #3498db, #9b59b6);
+            color: white;
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .table-container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+        
+        .table-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: linear-gradient(to right, #3498db, #9b59b6);
+        }
+        
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .click-hint {
+            color: #e74c3c;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 4px 10px;
+            border-radius: 8px;
+            margin-left: 8px;
+            animation: pulse-red 1.5s ease-in-out infinite;
+            display: inline-block;
+            border: 2px solid rgba(231, 76, 60, 0.3);
+        }
+        
+        @keyframes pulse-red {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 8px rgba(231, 76, 60, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:nth-child(even) {
+            background: rgba(236, 240, 241, 0.3);
+        }
+        
+        tbody tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+            transform: scale(1.01);
+        }
+        
+        td {
+            padding: 15px;
+            font-size: 1rem;
+            color: #2c3e50;
+        }
+        
+        .cheat-name {
+            font-weight: 500;
+            color: #2980b9;
+        }
+        
+        .cheat-code {
+            background: rgba(236, 240, 241, 0.7);
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(189, 195, 199, 0.5);
+            color: #2c3e50;
+            position: relative;
+            min-width: 140px;
+        }
+        
+        .cheat-code:hover {
+            background: rgba(52, 152, 219, 0.15);
+            transform: translateY(-2px);
+            color: #2980b9;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+            border-color: #3498db;
+        }
+        
+        .cheat-code::before {
+            content: "";
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232980b9'%3E%3Cpath d='M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: contain;
+            margin-right: 8px;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        
+        .cheat-code:hover::before {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(52, 73, 94, 0.95);
+            color: #ecf0f1;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .copy-notification::before {
+            content: "✓";
+            font-size: 1.2em;
+            color: #2ecc71;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            width: 100%;
+        }
+        
+        @media (max-width: 600px) {
+            th, td {
+                padding: 12px 8px;
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .category-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+            
+            .click-hint {
+                font-size: 0.85rem;
+                padding: 3px 8px;
+                margin-left: 5px;
+            }
+            
+            .cheat-code {
+                padding: 8px 12px;
+                min-width: 120px;
+            }
+            
+            .cheat-code::before {
+                width: 14px;
+                height: 14px;
+                margin-right: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>侠盗猎车手3</h1>
+            <p class="subtitle">热门作弊码合集</p>
+        </header>
+        
+        <div class="category-tabs">
+            <button class="category-btn active" data-category="player">玩家</button>
+            <button class="category-btn" data-category="vehicle">载具</button>
+            <button class="category-btn" data-category="theme">主题和NPC</button>
+            <button class="category-btn" data-category="weather">时间和天气</button>
+        </div>
+        
+        <!-- 玩家表格 -->
+        <div class="table-container active" id="player-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+				    <tr>
+                        <td class="cheat-name">获得所有武器</td>
+                        <td><span class="cheat-code">gunsgunsguns</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">获得25万美元现金</td>
+                        <td><span class="cheat-code">ifiwerearichman</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">通缉度增加两星</td>
+                        <td><span class="cheat-code">morepoliceplease</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">消除所有通缉度</td>
+                        <td><span class="cheat-code">nopoliceplease</span></td>
+                    </tr><tr>
+                        <td class="cheat-name">加满护甲</td>
+                        <td><span class="cheat-code">tortoise</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">回满血，如果正在驾驶载具，则回满载具的血量</td>
+                        <td><span class="cheat-code">gesundheit</span></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 载具表格 -->
+        <div class="table-container" id="vehicle-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cheat-name">获得犀牛坦克</td>
+                        <td><span class="cheat-code">giveusatank</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">提高所有车辆的跳跃能力，向前行驶时按H键起跳（手柄是左摇杆)</td>
+                        <td><span class="cheat-code">cornerslikemad</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">车辆只能看见轮子(仅原版游戏可用)</td>
+                        <td><span class="cheat-code">anicesetofwheels</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">车辆变得低重力，不断加速到一定速度后（中途不要撞到东西)，可开车在空中飞</td>
+                        <td><span class="cheat-code">chittychittybb</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">摧毁所有载具，不包括警用直升机和NPC的Dodo飞机</td>
+                        <td><span class="cheat-code">bangbangbang</span></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 主题和NPC表格 -->
+        <div class="table-container" id="theme-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cheat-name">血腥模式(仅原版游戏可用)</td>
+                        <td><span class="cheat-code">nastylimbscheat</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">换装扮演行人</td>
+                        <td><span class="cheat-code">ilikedressingup</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">行人都带武器</td>
+                        <td><span class="cheat-code">weaponsforall</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">所有行人都会攻击主角</td>
+                        <td><span class="cheat-code">nobodylikesme</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">路上的行人变得疯狂</td>
+                        <td><span class="cheat-code">itsallgoingmaaad</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 时间和天气表格 -->
+        <div class="table-container" id="weather-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>作弊码名称</th>
+                        <th>作弊码<span class="click-hint">点击即可复制</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cheat-name">天气晴朗</td>
+                        <td><span class="cheat-code">skincancerforme</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">阴云密布</td>
+                        <td><span class="cheat-code">ilikescotland</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">大雾天气</td>
+                        <td><span class="cheat-code">peasoup</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cheat-name">暴风雨天气</td>
+                        <td><span class="cheat-code">ilovescotland</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">加快游戏时钟</td>
+                        <td><span class="cheat-code">madweather</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">游戏半速，最低减到四分之一</td>
+                        <td><span class="cheat-code">boooooring</span></td>
+                    </tr>
+					<tr>
+                        <td class="cheat-name">游戏倍速，最高加到4倍</td>
+                        <td><span class="cheat-code">timeflieswhenyou</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        
+    </div>
+    
+    <div class="copy-notification" id="copyNotification">已复制到剪贴板</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 分类切换功能
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const tableContainers = document.querySelectorAll('.table-container');
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    // 添加active类到当前按钮
+                    this.classList.add('active');
+                    
+                    // 隐藏所有表格
+                    tableContainers.forEach(table => table.classList.remove('active'));
+                    
+                    // 显示对应分类的表格
+                    const category = this.getAttribute('data-category');
+                    const targetTable = document.getElementById(`${category}-table`);
+                    if (targetTable) {
+                        targetTable.classList.add('active');
+                    }
+                });
+            });
+            
+            // 作弊码复制功能
+            const cheatCodes = document.querySelectorAll('.cheat-code');
+            const notification = document.getElementById('copyNotification');
+            
+            cheatCodes.forEach(code => {
+                code.addEventListener('click', function() {
+                    const textToCopy = this.textContent;
+                    
+                    // 使用现代剪贴板API
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        // 显示复制成功通知
+                        notification.style.opacity = '1';
+                        setTimeout(() => {
+                            notification.style.opacity = '0';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('复制失败: ', err);
+                        // 备用方法
+                        const textArea = document.createElement('textarea');
+                        textArea.value = textToCopy;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        // 显示复制成功通知
+                        notification.style.opacity = '1';
+                        setTimeout(() => {
+                            notification.style.opacity = '0';
+                        }, 2000);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
